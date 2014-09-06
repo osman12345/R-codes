@@ -1,0 +1,33 @@
+---
+title: "Linear Regression"
+output: html_document
+---
+```{r}
+# load "leaps" package
+library(leaps)
+# load mtcars data
+m=mtcars
+# selec best x variable
+fit=regsubsets(m$mpg~m$cyl+m$disp+m$hp+m$drat+m$wt+m$qsec+m$vs+m$am+m$gear+m$carb,data=m)
+plot(fit,scale="adjr2"); plot(fit,scale="bic")
+# fit model with best x variable
+fit7=lm(m$mpg~m$wt+m$qsec+m$am,data=m)
+summary(fit7)
+#plot model 
+par(mfrow=c(2,2))
+plot(fit7)
+```
+
+
+```{r}
+
+null=lm(m$mpg~1,data=m) #choose y and data
+full=lm(m$mpg~.,data=m) #choose y and data
+# forward selection method
+step(null, scope=list(lower=null, upper=full), direction="forward")
+# backward selection method
+step(full, data=m, direction="backward")
+# both directions
+step(null, scope = list(upper=full), data=m, direction="both")
+```
+
